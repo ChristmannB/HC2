@@ -1,0 +1,62 @@
+-- ASSOCIATION VOLET FUTUROL avec commande IOc à partir télécimmande du Volet:
+-- 1)Appuyer sur le bouton PROG derrière télécommande Volet A
+-- 2)Attendre mvt aller & retour du volet
+-- 3)Appuyer sur bouton Rest du KLF-50
+-- Vérifer le bon fonctionnement de la commande
+-- Recommencer avec la deuxième télécommande du Volet B
+-- Procédure ci-dessus réalisée ave succès le 28/01/2020
+
+-- ASSSOCIATION VOLET VELUX
+-- 
+
+-- Commande de volet VELUX via KLF-50 et FGS-222
+--Créer un VD dont le bouton principal fait monter ou descendre le volet en fonction d'un paramètre fonction de la dernière action avec timer terminé
+
+local action =0
+-- Action du bouton principal
+-- If action = 1: lancer scénario Descente else lancer scénario Montée
+
+
+-- Scénario Montée :
+fibaro.call(S2,"turnOff")-- auto OFF prognammé à 50s
+fibaro.call(S1,"turnOn") -- auto OFF prognammé à 50s
+fibaro.set(action = 1)
+-- Lancer le timer
+
+-- Afficher l'Icône du mvt
+ 
+-- Scénario Descente :
+fibaro.call(S1,"turnOff")-- auto OFF prognammé à 50s
+fibaro.call(S2,"turnOn") -- auto OFF prognammé à 50s
+
+-- lancer le timer
+
+-- Afficher l'Icône du mvt
+
+-- Scénario Stop :
+fibaro.call(S1,"turnOn")
+fibaro.call(S2,"turnOn")
+fibaro.set(action = 1)
+-- Stopper le timer
+
+-- Afficher Icone 2
+
+fibaro.sleep(1000) -- attente de  1 avant de faire une RAZ des switchs S1 et S2 (Off)
+fibaro.call(S1,"turnOff")-- Temporisation de RAZ
+fibaro.call(S2,"turnOff")
+
+
+
+-- Pour l'icône voir VD batteries de Scantronic pour changement Icône en haut
+-- FORUM SUR CE SUJET :
+-- https://www.domotique-fibaro.fr/topic/11993-velux-klf-050-kux110/?page=2
+--  PRINCIPE : 
+--  Icône 0 VD au repos : image interrupteur volet
+--  Icône 1 = Volet ouvert 100% (Appui sur flèche vers le haut) 
+--  Icône 2 = Volet Ouvert 50% (appui sur STOP)
+--  Icône 3 = Volet ouvert 0% (fermé)
+ 
+--  Timer : valeurs 0 à 50s
+-- if Timer = Entre 0 et 15s -> Icône 1 pour la descente et 3 pour la montée 
+-- if Timer = entre 16s et 45s -> Icône 2
+-- if Timer = entre 45s et 50s 50s -> Icone 3 pour la descente et 1 pour la montée 
