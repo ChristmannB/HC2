@@ -1,0 +1,98 @@
+--1, Label1 
+-- Label:🚩
+--ID: Label1
+--===================================================
+--2,1 button
+local VDiD = 796
+fibaro:debug("VD id: "..VDiD)
+fibaro:call(VDiD,"setProperty","currentIcon",1044)
+local device = 698
+localhost = '127.0.0.1'
+local port = 11111
+Http = Net.FHttp(localhost, port)
+response = Http:GET("/api/remoteGateways")
+fibaro:debug("response: "..response) --.OK.
+result=json.decode(response)
+fibaro:debug("Result: "..json.encode(result))
+
+fibaro:debug(result[1].name) --OK
+
+
+if result[1].connected then
+  fibaro:debug(result[1].name.." connectée ".."\240\159\164\168")
+  fibaro:call(VDiD,"setProperty","ui.Label1.value",result[1].name.." connectée - ".."\240\159\164\168")
+  fibaro:call(VDiD,"setProperty","currentIcon",1056)  
+else fibaro:debug(result[1].name.." déconnectée ".."\226\157\151\239\184\143")
+  fibaro:call(VDiD,"setProperty","ui.Label1.value",result[1].name.." déconnectée - ".."\226\157\151\239\184\143")
+  fibaro:call(VDiD,"setProperty","currentIcon",1057)  
+end
+
+--======================================================
+--3,1 button
+--Label:"Synchronisation"
+--ID:"Button21"
+--lua code
+local gatewayId=326
+local localhost = '127.0.0.1'
+local port = 11111
+local Http = Net.FHttp(localhost,port)
+Http:setBasicAuthentication("bruviere@orange.fr","2357Bccv7677")
+response, status, errorCode = Http:GET("/api/remoteGateways?id=326")
+fibaro:debug("status "..status..", errorCode "..errorCode)
+fibaro:debug("response: ".. response)
+resultTable=json.decode(response)
+fibaro:debug("gatewayTable ->"..json.encode(resultTable))
+
+local  idTable={}
+
+for i, ids in ipairs(resultTable["deviceMapping"]) do
+idTable[i]=ids[2]
+  fibaro:debug(idTable[i])
+end 
+request = json.encode({remoteGatewayId=326,synchronize=idTable})
+
+response2 ,status2, errorCode2 = Http:POST("/api/remoteGateways/synchronizeDevices", request)
+fibaro:debug("status2: "..status2..", errorCode2: "..errorCode2)
+--fibaro:debug(json.encode(response2))
+
+fibaro:sleep(6000)
+fibaro:call(796,"setProperty","currentIcon",1056) 
+
+--======================================================
+--Main Loop
+-- main for chcking HC2 slave status (Connected or not
+
+fibaro:debug("----- Start VD HC2 slave synch -----")
+local VDiD = fibaro:getSelfId()
+fibaro:debug("VD id: "..VDiD)
+local localhost = '127.0.0.1'
+local port = 11111
+Http = Net.FHttp(localhost, port);
+response = Http:GET("/api/remoteGateways")
+fibaro:debug("response: "..response) --.OK.
+result=json.decode(response)
+fibaro:debug("Result: "..json.encode(result))
+
+fibaro:debug("Name ".. result[1].name) --OK
+
+
+if result[1].connected then
+  fibaro:debug(result[1].name.." connectée ".."\240\159\164\168")
+  fibaro:call(VDiD,"setProperty","ui.Label1.value",result[1].name.." connectée - ".."\240\159\164\168")
+  fibaro:call(VDiD,"setProperty","currentIcon",1056)  
+else fibaro:debug(result[1].name.." déconnectée ".."\226\157\151\239\184\143")
+  fibaro:call(VDiD,"setProperty","ui.Label1.value",result[1].name.." déconnectée - ".."\226\157\151\239\184\143")
+  fibaro:call(VDiD,"setProperty","currentIcon",1057)  
+end
+--fibaro:debug("----- End VD HC2 slave synch -----")
+function pressButtonSynch()
+  fibaro:call(VDiD,"pressButton",3)
+  local dateAppui=os.date("*t")
+  fibaro:debug(json.encode(dateAppui))
+  fibaro:debug("Le bouton Synchronisation a été activé le "..dateAppui['day'].."/"..dateAppui['month'].." à "..dateAppui['hour']..":"..dateAppui['min'])
+  fibaro:call(VDiD,"setProperty","ui.Label2.value",dateAppui['day'].."/"..dateAppui['month'].." à "..dateAppui['hour']..":"..dateAppui['min'])
+ end
+fibaro:sleep(5000)
+pressButtonSynch()
+fibaro:sleep(24*60*60*1000)
+ 
