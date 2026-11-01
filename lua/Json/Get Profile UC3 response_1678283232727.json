@@ -1,0 +1,479 @@
+{
+  "id": 1,
+  "name": "PRESENT",
+  "iconId": 1,
+  "devices": [
+    {
+      "id": 29,
+      "action": null
+    },
+    {
+      "id": 30,
+      "action": null
+    },
+    {
+      "id": 31,
+      "action": null
+    },
+    {
+      "id": 32,
+      "action": null
+    },
+    {
+      "id": 34,
+      "action": null
+    },
+    {
+      "id": 35,
+      "action": null
+    },
+    {
+      "id": 36,
+      "action": null
+    },
+    {
+      "id": 37,
+      "action": null
+    },
+    {
+      "id": 47,
+      "action": null
+    },
+    {
+      "id": 48,
+      "action": null
+    },
+    {
+      "id": 49,
+      "action": null
+    },
+    {
+      "id": 50,
+      "action": null
+    },
+    {
+      "id": 52,
+      "action": null
+    },
+    {
+      "id": 53,
+      "action": null
+    },
+    {
+      "id": 54,
+      "action": null
+    },
+    {
+      "id": 55,
+      "action": null
+    },
+    {
+      "id": 57,
+      "action": null
+    },
+    {
+      "id": 58,
+      "action": null
+    },
+    {
+      "id": 59,
+      "action": null
+    },
+    {
+      "id": 60,
+      "action": null
+    },
+    {
+      "id": 72,
+      "action": null
+    },
+    {
+      "id": 73,
+      "action": null
+    },
+    {
+      "id": 74,
+      "action": null
+    },
+    {
+      "id": 75,
+      "action": null
+    },
+    {
+      "id": 77,
+      "action": null
+    },
+    {
+      "id": 78,
+      "action": null
+    },
+    {
+      "id": 79,
+      "action": null
+    },
+    {
+      "id": 80,
+      "action": null
+    },
+    {
+      "id": 94,
+      "action": null
+    },
+    {
+      "id": 116,
+      "action": {
+        "name": "turnOn",
+        "isUIAction": false,
+        "args": []
+      }
+    },
+    {
+      "id": 178,
+      "action": null
+    },
+    {
+      "id": 179,
+      "action": null
+    },
+    {
+      "id": 181,
+      "action": null
+    },
+    {
+      "id": 182,
+      "action": null
+    },
+    {
+      "id": 184,
+      "action": null
+    },
+    {
+      "id": 185,
+      "action": null
+    },
+    {
+      "id": 187,
+      "action": null
+    },
+    {
+      "id": 188,
+      "action": null
+    },
+    {
+      "id": 192,
+      "action": null
+    },
+    {
+      "id": 193,
+      "action": null
+    },
+    {
+      "id": 195,
+      "action": null
+    },
+    {
+      "id": 196,
+      "action": null
+    },
+    {
+      "id": 198,
+      "action": null
+    },
+    {
+      "id": 199,
+      "action": null
+    },
+    {
+      "id": 201,
+      "action": null
+    },
+    {
+      "id": 202,
+      "action": null
+    },
+    {
+      "id": 303,
+      "action": null
+    },
+    {
+      "id": 304,
+      "action": null
+    },
+    {
+      "id": 305,
+      "action": null
+    },
+    {
+      "id": 306,
+      "action": null
+    },
+    {
+      "id": 308,
+      "action": null
+    },
+    {
+      "id": 309,
+      "action": null
+    },
+    {
+      "id": 310,
+      "action": null
+    },
+    {
+      "id": 311,
+      "action": null
+    },
+    {
+      "id": 313,
+      "action": null
+    },
+    {
+      "id": 314,
+      "action": null
+    },
+    {
+      "id": 315,
+      "action": null
+    },
+    {
+      "id": 316,
+      "action": null
+    },
+    {
+      "id": 317,
+      "action": null
+    },
+    {
+      "id": 318,
+      "action": null
+    },
+    {
+      "id": 319,
+      "action": null
+    },
+    {
+      "id": 320,
+      "action": null
+    },
+    {
+      "id": 322,
+      "action": null
+    },
+    {
+      "id": 324,
+      "action": null
+    },
+    {
+      "id": 326,
+      "action": null
+    },
+    {
+      "id": 327,
+      "action": null
+    },
+    {
+      "id": 329,
+      "action": null
+    },
+    {
+      "id": 330,
+      "action": null
+    },
+    {
+      "id": 338,
+      "action": null
+    },
+    {
+      "id": 339,
+      "action": null
+    },
+    {
+      "id": 340,
+      "action": null
+    },
+    {
+      "id": 341,
+      "action": null
+    },
+    {
+      "id": 343,
+      "action": null
+    },
+    {
+      "id": 344,
+      "action": null
+    },
+    {
+      "id": 346,
+      "action": null
+    },
+    {
+      "id": 347,
+      "action": null
+    },
+    {
+      "id": 353,
+      "action": null
+    },
+    {
+      "id": 360,
+      "action": null
+    },
+    {
+      "id": 361,
+      "action": null
+    },
+    {
+      "id": 363,
+      "action": null
+    },
+    {
+      "id": 364,
+      "action": null
+    },
+    {
+      "id": 368,
+      "action": null
+    },
+    {
+      "id": 369,
+      "action": null
+    },
+    {
+      "id": 370,
+      "action": null
+    },
+    {
+      "id": 371,
+      "action": null
+    },
+    {
+      "id": 372,
+      "action": null
+    },
+    {
+      "id": 373,
+      "action": null
+    },
+    {
+      "id": 374,
+      "action": null
+    },
+    {
+      "id": 375,
+      "action": null
+    },
+    {
+      "id": 378,
+      "action": null
+    },
+    {
+      "id": 380,
+      "action": null
+    },
+    {
+      "id": 381,
+      "action": null
+    },
+    {
+      "id": 382,
+      "action": null
+    },
+    {
+      "id": 383,
+      "action": null
+    },
+    {
+      "id": 386,
+      "action": null
+    },
+    {
+      "id": 388,
+      "action": null
+    },
+    {
+      "id": 389,
+      "action": null
+    },
+    {
+      "id": 410,
+      "action": null
+    },
+    {
+      "id": 411,
+      "action": null
+    },
+    {
+      "id": 413,
+      "action": null
+    },
+    {
+      "id": 414,
+      "action": null
+    },
+    {
+      "id": 416,
+      "action": null
+    },
+    {
+      "id": 425,
+      "action": null
+    }
+  ],
+  "scenes": [],
+  "climateZones": [
+    {
+      "id": 1,
+      "mode": "Schedule"
+    },
+    {
+      "id": 2,
+      "mode": "Schedule"
+    },
+    {
+      "id": 3,
+      "mode": "Schedule"
+    },
+    {
+      "id": 4,
+      "mode": "Schedule"
+    },
+    {
+      "id": 5,
+      "mode": "Schedule"
+    },
+    {
+      "id": 6,
+      "mode": "Schedule"
+    },
+    {
+      "id": 7,
+      "mode": "Schedule"
+    },
+    {
+      "id": 8,
+      "mode": "Schedule"
+    },
+    {
+      "id": 9,
+      "mode": "Schedule"
+    },
+    {
+      "id": 11,
+      "mode": "Schedule"
+    },
+    {
+      "id": 12,
+      "mode": "Schedule"
+    },
+    {
+      "id": 13,
+      "mode": "Schedule"
+    },
+    {
+      "id": 14,
+      "mode": "Schedule"
+    }
+  ],
+  "partitions": []
+}
