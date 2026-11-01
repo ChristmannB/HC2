@@ -1,0 +1,291 @@
+SONOS Remote V1.0.1 RC pour Fibaro HC2
+
+Télécommande avec retour d’informations pour diffuseur SONOS, prise en charge du TTS (Text-to-Speech) et lecture de stream depuis vos scènes et périphériques virtuels.
+
+ 
+gallery_3_74_7729.png
+ 
+- Les fonctions : Play,  Pause,  Stop,  Prev,  Next,  Seek, Volume, Mute, Loudness, Accès direct aux 5 premières radios de “Mes radios”.
+- Les informations : Zone, Etat du diffuseur, Position, Titre ou Nom de la radio, Artiste, Album, Volume, Loudness, dernière commande émise.
+ 
+capture home 0.0.5
+
+ 
+Installation :
+
+ 
+
+A partir de la version 1.0.0 beta:
+
+ 
+
+1. Télécharger puis importer le vd.
+
+2. Renseigner l’adresse IP du diffuseur SONOS (le coordinateur) dans le vd ainsi que le port 1400
+
+3. Pour utiliser la fonction TTS VoiceRSS il faut une API Key, pour l'enregistrement (gratuit) c'est ici http://www.voicerss....gistration.aspx
+
+4. Renseigner la variable voiceRssApiKey avec la clé, choisir un niveau de qualité sonore pour la generation avec voiceRssSoundQuality: low, medium, high
+
+     
+    UserParams = {
+      -- Voice RSS API Key (Free Registration: http://www.voicerss.org/registration.aspx)
+      voiceRssApiKey = "000000000000000000000000000",
+      -- Sound quality: low, medium, high
+      voiceRssSoundQuality = "medium"
+    }
+     
+     
+
+5. Enregistrer les modifications, c'est bon...
+
+ 
+
+Utilisation :
+ 
+TTS : Pour utiliser le TTS depuis une scène ou un périphérique virtuel il faut juste exécuter le code LUA suivant avec les bons paramètres.
+
+     
+    -- 408 is the Virtual Device ID
+    -- 28 is the Process button ID
+    local sid, bid = 408, 28
+    -- Create TTS params object
+    local params = {
+      -- TTS Message
+      message = "La température extérieure actuelle est de 21,2°C",  
+      duration = 'auto',	-- Duration: "auto", xx seconds
+      language = "fr-FR",	-- Language: fr-FR
+      volume = 10			-- Volume
+    }
+    local _f = fibaro
+    local _x ={root="x_sonos_object",load=function(b)local c=_f:getGlobalValue(b.root)if string.len(c)>0 then local d=json.decode(c)if d and type(d)=="table"then return d else _f:debug("Unable to process data, check variable")end else _f:debug("No data found!")end end,set=function(b,e,d)local f=b:load()if f[e]then for g,h in pairs(d)do f[e][g]=h end else f[e]=d end;_f:setGlobal(b.root,json.encode(f))end,get=function(b,e)local f=b:load()if f and type(f)=="table"then for g,h in pairs(f)do if tostring(g)==tostring(e or"")then return h end end end;return nil end}
+    -- Make a request to the remote to process params object instantly
+    _x:set(tostring(sid), { tts = params })
+    _f:call(sid, "pressButton", bid)
+     
+
+Les options de l'objet params:
+
+ 
+
+- message: le message tts
+
+- language: la source du flux (http ou local, local est attribué par défaut)
+
+- duration: durée du tts. (en secondes ou "auto")
+
+- volume: le volume utilisé pour la lecture du tts si différent du volume en cours d'utilisation
+
+ 
+
+Le programme en cours de diffusion au moment de la demande reprendra après la diffusion complète du TTS. Reprise de la radio, de la piste à l’endroit précis avant arrêt, reprise de l’état du diffuseur : Volume, Mute, Play, Stop.
+ 
+
+STREAM: Pour utiliser la lecture de Stream depuis une scène ou un périphérique virtuel il faut exécuter le code LUA suivant avec les bons paramètres.
+
+     
+    -- 408 is the Virtual Device ID
+    -- 28 is the Process button ID
+    local sid, bid = 408, 28
+    -- Create STREAM params object
+    local params = {
+      -- stream: the file / uri
+      stream = "//s3.amazonaws.com/smartapp-media/sonos/bell1.mp3",
+      -- source: "local" or "http", "local" is setted by default
+      source = "http",
+      -- duration: play duration in seconds (option) or "auto"
+      duration = 8,
+      -- volume: the volume for playing the stream
+      volume = 10
+    }
+    local _f = fibaro
+    local _x ={root="x_sonos_object",load=function(b)local c=_f:getGlobalValue(b.root)if string.len(c)>0 then local d=json.decode(c)if d and type(d)=="table"then return d else _f:debug("Unable to process data, check variable")end else _f:debug("No data found!")end end,set=function(b,e,d)local f=b:load()if f[e]then for g,h in pairs(d)do f[e][g]=h end else f[e]=d end;_f:setGlobal(b.root,json.encode(f))end,get=function(b,e)local f=b:load()if f and type(f)=="table"then for g,h in pairs(f)do if tostring(g)==tostring(e or"")then return h end end end;return nil end}
+    -- Make a request to the remote to process params object instantly
+    _x:set(tostring(sid), { stream = params })
+    _f:call(sid, "pressButton", bid)
+     
+
+Les options de l'objet params:
+
+ 
+
+- stream: le chemin du flux
+
+- source: la source du flux (http ou local, local est attribué par défaut)
+
+- duration: durée du stream. (en secondes ou "auto")
+
+- volume: le volume utilisé pour la lecture du flux si différent du volume en cours d'utilisation
+
+ 
+
+Quelques exemples:
+
+Annoncer la température dans une scène :
+
+     
+    --[[
+    %% properties
+     
+     
+    %% globals
+    --]]
+     
+     
+    -- 408 is the Virtual Device ID
+    -- 28 is the Process button ID
+    local sid, bid = 811, 28
+    -- Create TTS params object
+    local ValeurTemp = fibaro:getValue(61, "value")
+    local degre = string.gsub(ValeurTemp, '[,]' , ' degret ')
+    local degre = string.gsub(degre, '[.]' , ' degret ')
+    local degre = string.gsub(degre, '[-]' , ' moins ')
+    local notification = "Il fait " .. degre .. " dans le salon "
+    fibaro:debug(notification)
+    local params = {
+      -- TTS Message
+     
+      message = notification,  
+      duration = 'auto', -- Duration: "auto", xx seconds
+      language = "fr-FR", -- Language: fr-FR
+      volume = 23 -- Volume
+    }
+    local _f = fibaro
+    local _x ={root="x_sonos_object",load=function(b)local c=_f:getGlobalValue(b.root)if string.len(c)>0 then local d=json.decode(c)if d and type(d)=="table"then return d else _f:debug("Unable to process data, check variable")end else _f:debug("No data found!")end end,set=function(b,e,d)local f=b:load()if f[e]then for g,h in pairs(d)do f[e][g]=h end else f[e]=d end;_f:setGlobal(b.root,json.encode(f))end,get=function(b,e)local f=b:load()if f and type(f)=="table"then for g,h in pairs(f)do if tostring(g)==tostring(e or"")then return h end end end;return nil end}
+    -- Make a request to the remote to process params object instantly
+    _x:set(tostring(sid), { tts = params })
+    _f:call(sid, "pressButton", bid)
+     
+
+Annoncer la valeur d'une variable :
+
+     
+    --[[
+    %% properties
+    %% globals
+    --]]
+     
+     
+    local sid, bid = 813, 28
+    -- Create TTS params object
+    local couleur = fibaro:getGlobalValue("le nom de ta variable")
+    local notification = ("La couleur de demain sera "..couleur.." Bonne journée")
+    fibaro:debug(notification)
+    local params = {
+      -- TTS Message
+     
+      message = notification,  
+      duration = 'auto', -- Duration: "auto", xx seconds
+      language = "fr-FR", -- Language: fr-FR
+      volume = 23 -- Volume
+    }
+    local _f = fibaro
+    local _x ={root="x_sonos_object",load=function(b)local c=_f:getGlobalValue(b.root)if string.len(c)>0 then local d=json.decode(c)if d and type(d)=="table"then return d else _f:debug("Unable to process data, check variable")end else _f:debug("No data found!")end end,set=function(b,e,d)local f=b:load()if f[e]then for g,h in pairs(d)do f[e][g]=h end else f[e]=d end;_f:setGlobal(b.root,json.encode(f))end,get=function(b,e)local f=b:load()if f and type(f)=="table"then for g,h in pairs(f)do if tostring(g)==tostring(e or"")then return h end end end;return nil end}
+    -- Make a request to the remote to process params object instantly
+    _x:set(tostring(sid), { tts = params })
+    _f:call(sid, "pressButton", bid) 
+
+Annoncer la date du jour, la température extérieure et la météo :
+
+     
+    -- 239 is the Virtual Device ID
+    -- 28 is the Process button ID
+    local sid, bid = 239, 28
+     
+    local cond = fibaro:getValue(3, "WeatherConditionConverted");
+    local tempext = fibaro:getValue(33, "value"); -- température extérieure
+    fibaro:debug ("Température extérieure : "..tempext)
+    local degre = string.gsub(tempext, '[,]' , ' degré ')
+    local degre = string.gsub(degre, '[.]' , ' degré ')
+    local degre = string.gsub(degre, '[-]' , ' moins ')
+     
+    local currentDate = os.date("*t")
+    local jourL = {"Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"}
+    local jour = jourL[currentDate.wday]
+    fibaro:debug ("Jour : "..jour)
+     
+    local moisL = {"janvier", "février", "mars", "avril", "mai", "juin",
+                   "juillet", "aout", "septembre", "octobre", "novembre", "décembre"}
+    local mois = moisL[currentDate.month]
+    fibaro:debug ("Mois : "..mois)
+     
+    local condfr ="";
+    if( cond == "clear" ) then condfr = "clair"; end
+    if( cond == "cloudy" ) then condfr = "nuageux"; end
+    if( cond == "rain" ) then condfr = "pluvieux"; end
+    if( cond == "snow" ) then condfr = "neigeux"; end
+    if( cond == "storm" ) then condfr = "tempete"; end
+    if( cond == "fog" ) then condfr = "brouillard"; end
+    fibaro:debug ("Conditions météorologiques : "..condfr)
+     
+    fibaro:debug ("Création du TTS")
+    -- Create TTS params object
+    local params = {
+      -- TTS Message
+      message = "Bonjour a vous. Nous sommes le "..jour .." "..currentDate.day .." "..mois ..
+                ". Il est ".. currentDate.hour .." heure et ".. currentDate.min .." minutes. "..
+                "Le thermomètre extérieur est a "..degre ..
+                ", et le temps est  "..condfr ..". ",  
+      duration = 'auto',    -- Duration: "auto", xx seconds
+      language = "fr-FR",    -- Language: fr-FR
+      volume = 40            -- Volume
+    }
+    local _f = fibaro
+    local _x ={root="x_sonos_object",load=function(b)local c=_f:getGlobalValue(b.root)if string.len(c)>0 then local d=json.decode(c)if d and type(d)=="table"then return d else _f:debug("Unable to process data, check variable")end else _f:debug("No data found!")end end,set=function(b,e,d)local f=b:load()if f[e]then for g,h in pairs(d)do f[e][g]=h end else f[e]=d end;_f:setGlobal(b.root,json.encode(f))end,get=function(b,e)local f=b:load()if f and type(f)=="table"then for g,h in pairs(f)do if tostring(g)==tostring(e or"")then return h end end end;return nil end}
+    -- Make a request to the remote to process params object instantly
+    _x:set(tostring(sid), { tts = params })
+    _f:call(sid, "pressButton", bid) 
+
+Notes de versions:
+
+ 
+
+Version 1.0.1 Rc
+
+- Correction: régression introduite avec la V4.080 impactant la création automatique de la variable globale
+
+ 
+
+Version 1.0.0 beta
+
+ 
+
+ATTENTION: Le passage d'une version antérieure à la v1.0.0 pour la v1.0.0 ou supérieure nécessite la réécriture des commandes TTS pour fonctionner avec le nouveau module. L'ancien module reste cependant fonctionnel et peut cohabiter logiquement avec la nouvelle version. En cas de passage définitif en V1.0.0 ou supérieure toutes les variables globales déclarées précédemment en V0.0.7 ou V0.0.8 peuvent être supprimées.
+
+- Amélioration : Configuration automatique, pas de déclaration de variables globales
+
+- Amélioration : Support natif de multiples instances du périphérique virtuel
+
+- Amélioration : Faible latence lors du déclenchement des commandes
+
+- Amélioration : Révision et amélioration du code / Refactoring
+
+- Ajout: Le TTS utilise le service Voice RSS (avec une API Key (enregistrement gratuit)) ou ResponsiveVoice API. Options: durée, volume, auto resume
+
+- Ajout: Lancement de Stream (http / local) depuis scéne / vd. Options: durée, volume, auto resume
+
+ 
+
+Version 0.0.8
+
+- Amélioration : La lecture d'un TTS en mode Auto Stop est maintenant stable
+- Amélioration : La lecture d'un TTS avec une durée définie est maintenant stable
+- L'image principale du vd réapparaît maintenant automatiquement après l'appui sur un bouton (Labomatik & JM13, merci  ;))
+- Correction d'un bug avec l'analyse xml de BrowseDirectChildren
+- Attention: Pour utiliser les raccourcis "boutons radios favorites" vous devez ajouter au moins deux radios depuis l'application SONOS "Desktop/IOS etc..."
+
+ 
+
+Version 0.0.7
+
+- Amélioration notable de la stabilité, le vd est plus réactif.
+- Patch line 892: attempt to index local 'value' (a function value)
+- Patch line 1256: attempt to concatenate a nil value
+- Préparation au support de nouvelles fonctionnalités
+
+ 
+Fichier Zip : Fichier joint  SONOS_Remote_v1.0.1.vfib   105,74 Ko   179 téléchargement(s)
+Fichier(s) joint(s)
+
+    Fichier joint  SONOS_Remote_v1.0.0.vfib   105,05 Ko   322 téléchargement(s)
+
